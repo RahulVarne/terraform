@@ -19,3 +19,15 @@ variable "availability_zone" {
   type = list(string)
 }
 
+variable "vpc_name" {
+  description = "we assign name to our vpc"
+  type = string
+}
+
+variable "tags" {
+description = "A map of tags to add to all resources"
+type = map(string)
+}
+
+
+
