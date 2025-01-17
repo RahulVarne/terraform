@@ -1,5 +1,5 @@
 module "vpc" {
-source ="/mnt/f/cloudblitz-terraform/vpc/vpc.tf"
+source ="git::https://github.com/RahulVarne/terraform.git//vpc/vpc.tf"
 vpc_name ="my vpc"
 region  = "us-east-1"
 cidr_block = "10.0.0.0/16"
