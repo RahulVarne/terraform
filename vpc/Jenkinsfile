@@ -2,21 +2,13 @@ pipeline {
     agent any
 
     environment {
-        TF_DIR = "vpc" // Update this if Terraform files are in a different directory
+        TF_DIR = "vpc" // Update if the correct folder is different
     }
 
     stages {
         stage('Checkout Code') {
             steps {
                 git branch: 'main', url: 'https://github.com/RahulVarne/terraform.git'
-            }
-        }
-
-        stage('Setup AWS Credentials') {
-            steps {
-                withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                    sh 'aws sts get-caller-identity'
-                }
             }
         }
 
@@ -34,26 +26,6 @@ pipeline {
                 dir(TF_DIR) {
                     withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
                         sh 'terraform init'
-                    }
-                }
-            }
-        }
-
-        stage('Terraform Plan') {
-            steps {
-                dir(TF_DIR) {
-                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                        sh 'terraform plan'
-                    }
-                }
-            }
-        }
-
-        stage('Terraform Apply') {
-            steps {
-                dir(TF_DIR) {
-                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                        sh 'terraform apply -auto-approve'
                     }
                 }
             }
