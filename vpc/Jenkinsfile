@@ -32,7 +32,7 @@ pipeline {
                     sh 'terraform plan'
                 }
             }
-        }
+        
         }
     }
 }
