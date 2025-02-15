@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./vpc/vpc"
+  source = "./vpc/vpc-1"
 
   vpc_name = "my vpc"
   region   = "us-east-1"
