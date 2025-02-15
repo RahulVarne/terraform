@@ -1,31 +1,22 @@
 pipeline {
     agent any
 
+    environment {
+        TF_VERSION = "1.10.5"  // Updated Terraform version
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Clone Repository') {
             steps {
-                checkout scm
-            }
-        }
-    
-        stage ("terraform init") {
-            steps {
-                sh ("terraform init -reconfigure") 
-            }
-        }
-        
-        stage ("plan") {
-            steps {
-                sh ('terraform plan') 
+                git branch: 'main', url: 'https://github.com/RahulVarne/terraform.git'
             }
         }
 
-        stage (" Action") {
+        stage('Setup Terraform') {
             steps {
-                echo "Terraform action is --> ${action}"
-                sh ('terraform ${action} --auto-approve') 
-           }
+                sh 'terraform --version'
+                sh 'terraform init'
+            }
         }
     }
 }
-    
