@@ -1,38 +1,62 @@
 pipeline {
     agent any
 
+    environment {
+        TF_DIR = "vpc" // Update this if Terraform files are in a different directory
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/RahulVarne/terraform.git'
+                git branch: 'main', url: 'https://github.com/RahulVarne/terraform.git'
             }
         }
 
         stage('Setup AWS Credentials') {
             steps {
                 withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                    sh '''
-                    aws sts get-caller-identity
-                    '''
+                    sh 'aws sts get-caller-identity'
                 }
+            }
+        }
+
+        stage('Verify Terraform Files') {
+            steps {
+                sh '''
+                echo "Checking Terraform directory..."
+                ls -l $TF_DIR
+                '''
             }
         }
 
         stage('Terraform Init') {
             steps {
-                withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                    sh 'terraform init'
+                dir(TF_DIR) {
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                        sh 'terraform init'
+                    }
                 }
             }
         }
 
-         stage('Terraform Plan') {
+        stage('Terraform Plan') {
             steps {
-                withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
-                    sh 'terraform plan'
+                dir(TF_DIR) {
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                        sh 'terraform plan'
+                    }
                 }
             }
-        
+        }
+
+        stage('Terraform Apply') {
+            steps {
+                dir(TF_DIR) {
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                        sh 'terraform apply -auto-approve'
+                    }
+                }
+            }
         }
     }
 }
