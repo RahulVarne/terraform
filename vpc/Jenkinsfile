@@ -24,6 +24,12 @@ pipeline {
                     sh 'terraform init'
                 }
             }
+              stage('Terraform Apply') {
+            steps {
+                withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                    sh 'terraform apply -auto-approve'
+                }
+            }
         }
     }
 }
