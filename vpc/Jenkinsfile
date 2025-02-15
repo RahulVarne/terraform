@@ -50,5 +50,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Terraform Destroy') {
+            steps {
+                dir(TF_DIR) {
+                    withAWS(credentials: 'aws-credentials', region: 'us-east-1') {
+                        sh 'terraform destroy -auto-approve'
+                    }
+                }
+            }
+        }
     }
 }
