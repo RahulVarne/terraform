@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "git::https://github.com/RahulVarne/terraform.git//vpc?ref=main"
+  source = "vpc.tf"
 
   vpc_name = "my vpc"
   region   = "us-east-1"
